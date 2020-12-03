@@ -1,8 +1,8 @@
 import numpy as np
 import cv2
 import math
-import os
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 CANVAS_HIGH = 1100
 CANVAS_WIDTH = 1100
@@ -171,17 +171,33 @@ def show_heatmap(heatmap):
     plt.show()
 
 
+def draw_trace3d(data, ax=None, person=None, color='red'):
+    if person is None:
+        person = [0]
+    if ax is None:
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        Axes3D.view_init(ax, 45, 135)
+    times = np.array([i for i in range(2000)])
+    for i in range(len(person)):
+        draw_data = np.zeros((2000, 2), dtype=np.uint32)
+        draw_data[:, 0] = data.data[person[i]][0][0:2000, 0]
+        draw_data[:, 1] = data.data[person[i]][0][0:2000, 1]
+        Axes3D.plot(ax, xs=draw_data[:, 0], ys=draw_data[:, 1], zs=times, color=color)
+    return ax
+
+
 if __name__ == '__main__':
     # load_all_snips("E:\\DATA\\FASD eye dataset")
     # save_overlap_result(50, 10)
-    control_data = DataShow("./data/control_rawdata.npy")
-    control_data.load_data()
-    coor, _ = control_data.down_sample(30)
-    fasd_data = DataShow("./data/fasd_rawdata.npy")
-    fasd_data.load_data()
-    coor2, _ = fasd_data.down_sample(30, coor)
-    heatmap = generate_heatmap(coor2)
-    show_heatmap(heatmap)
+    # control_data = DataShow("./data/control_rawdata.npy")
+    # control_data.load_data()
+    # coor, _ = control_data.down_sample(30)
+    # fasd_data = DataShow("./data/fasd_rawdata.npy")
+    # fasd_data.load_data()
+    # coor2, _ = fasd_data.down_sample(30, coor)
+    # heatmap = generate_heatmap(coor2)
+    # show_heatmap(heatmap)
 
     # control_data = DataShow("./data/control_rawdata.npy")
     # control_data.load_data()
@@ -194,3 +210,11 @@ if __name__ == '__main__':
     # control_data.draw_data_trace(0)
     # control_data.show_img("trace")
     # cv2.waitKey()
+
+    control_data = DataShow("./data/control_rawdata.npy")
+    control_data.load_data()
+    ax = draw_trace3d(control_data, color='green', person=[i for i in range(control_data.data.shape[0])])
+    fasd_data = DataShow("./data/fasd_rawdata.npy")
+    fasd_data.load_data()
+    draw_trace3d(fasd_data, ax=ax, color='red', person=[i for i in range(fasd_data.data.shape[0])])
+    plt.show()
