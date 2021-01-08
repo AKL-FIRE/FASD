@@ -1,5 +1,5 @@
 import numpy as np
-import cv2
+# import cv2
 import math
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -187,6 +187,18 @@ def draw_trace3d(data, ax=None, person=None, color='red'):
     return ax
 
 
+def save_draw_trace3d(path):
+    data = DataShow(path)
+    data.load_data()
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    for i in range(10):
+        draw_trace3d(data, color='green', person=[i])
+        # filename = './result/img' + str(i) + '.jpg'
+        # plt.imsave(filename, ax)
+    #draw_trace3d(data, color='red', person=[30])
+
+
 if __name__ == '__main__':
     # load_all_snips("E:\\DATA\\FASD eye dataset")
     # save_overlap_result(50, 10)
@@ -211,10 +223,18 @@ if __name__ == '__main__':
     # control_data.show_img("trace")
     # cv2.waitKey()
 
-    control_data = DataShow("./data/control_rawdata.npy")
-    control_data.load_data()
-    ax = draw_trace3d(control_data, color='green', person=[i for i in range(control_data.data.shape[0])])
-    fasd_data = DataShow("./data/fasd_rawdata.npy")
-    fasd_data.load_data()
-    draw_trace3d(fasd_data, ax=ax, color='red', person=[i for i in range(fasd_data.data.shape[0])])
+    # control_data = DataShow("./data/control_rawdata.npy")
+    # control_data.load_data()
+    # ax = draw_trace3d(control_data, color='green', person=[i for i in range(control_data.data.shape[0])])
+    # # # ax = draw_trace3d(control_data, color='green', person=[0])
+    # # draw_trace3d(control_data, color='green', person=[i for i in range(control_data.data.shape[0])])
+    # fasd_data = DataShow("./data/fasd_rawdata.npy")
+    # fasd_data.load_data()
+    # draw_trace3d(fasd_data, ax=ax, color='red', person=[i for i in range(fasd_data.data.shape[0])])
+    # # # draw_trace3d(fasd_data, ax=ax, color='red', person=[0])
+    # # draw_trace3d(fasd_data, color='red', person=[i for i in range(fasd_data.data.shape[0])])
+    # plt.show()
+
+    save_draw_trace3d("./data/control_rawdata.npy")
+    save_draw_trace3d("./data/fasd_rawdata.npy")
     plt.show()
